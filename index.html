@@ -101,147 +101,149 @@ const LEVELS = [
 const PER_LEVEL = 20;
 const CEILING = LEVELS.reduce((a, l) => a + l.size, 0);
 
-/* ---------- Question bank: [word, correct meaning, 3 wrong meanings] ---------- */
+/* ---------- Question bank ----------
+   Entry format: [word, correct meaning, exact opposite, pair A, pair B]
+   Pair A and pair B are themselves opposites of each other (usually the meanings of a similar-sounding word),
+   so every question shows two opposite pairs and "find the opposite pair" never gives the answer away.
+   All four options in a question are kept to a similar length so length is not a clue either. */
 const BANK = [
   [ // Core
-    ["abundant","plentiful","very rare","carefully hidden","extremely old"],
-    ["candid","honest and direct","secretive","sugary","clumsy"],
-    ["dwell","to live in a place","to hurry along","to argue loudly","to hide away"],
-    ["emerge","to come into view","to fade away","to sink down","to mix together"],
-    ["frugal","careful with money","wasteful","very generous","greedy"],
-    ["hinder","to get in the way of","to assist","to notice","to repeat"],
-    ["jovial","cheerful and friendly","angry","sleepy","wealthy"],
-    ["lucid","clear and easy to follow","confusing","dark","sticky"],
-    ["meager","small in amount","huge","colorful","heavy"],
-    ["naive","lacking experience","very wise","physically strong","tired"],
-    ["obsolete","no longer in use","brand new","fragile","very popular"],
-    ["peculiar","odd or unusual","ordinary","soft","bright green"],
-    ["quench","to satisfy a thirst","to light a fire","to build quickly","to ignore"],
-    ["refute","to prove wrong","to agree with","to write down","to shout at"],
-    ["seldom","rarely","every day","loudly","gladly"],
-    ["tedious","boring and tiresome","thrilling","tasty","very short"],
-    ["wary","cautious","careless","sleepy","cheerful"],
-    ["yearn","to long for","to hate","to throw away","to leap over"],
-    ["zeal","great enthusiasm","laziness","fear","sorrow"],
-    ["barren","unable to support plants","lush","crowded","damp"],
-    ["diligent","hardworking","lazy","lucky","reckless"],
-    ["fickle","changing often","steady","rigid","very fast"],
-    ["gloom","partial darkness","bright sunshine","loud noise","sweet scent"],
-    ["hoax","a deliberate trick","a proven fact","a long trip","a heavy tool"],
-    ["linger","to stay longer than needed","to leave at once","to sprint","to stumble"],
-    ["mend","to repair","to break","to discard","to purchase"],
-    ["sturdy","strongly built","flimsy","tiny","noisy"],
-    ["ample","more than enough","not nearly enough","slightly bent","very old"]
+    ["abundant","existing in large supply","existing in small supply","left behind and deserted","kept and carefully guarded"],
+    ["candid","truthful and outspoken","evasive and deceitful","sweet and sugar-coated","bitter and sour-tasting"],
+    ["dwell","to live in a place","to leave a place","to dig a deep hole","to fill in a hole"],
+    ["emerge","to come out into view","to sink out of view","to join together as one","to split apart in two"],
+    ["frugal","careful about spending","careless about spending","easily broken or damaged","tough and hard to damage"],
+    ["hinder","to make a task harder","to make a task easier","located at the back","located at the front"],
+    ["jovial","cheerful and friendly","gloomy and unfriendly","with heavy, sagging cheeks","with thin, hollow cheeks"],
+    ["lucid","clear and easy to follow","vague and hard to follow","gory and shockingly vivid","dull and lacking color"],
+    ["meager","very small in amount","very large in amount","very keen and eager","very reluctant to act"],
+    ["naive","lacking life experience","full of life experience","born in a given place","foreign to a given place"],
+    ["obsolete","out of date and unused","brand new and in demand","complete and unlimited","partial and restricted"],
+    ["peculiar","strange and unusual","normal and expected","relating to cash payment","relating to barter trade"],
+    ["quench","to satisfy a thirst","to create a thirst","to ask many questions","to give many answers"],
+    ["refute","to prove to be wrong","to prove to be right","to give safe shelter","to leave without shelter"],
+    ["seldom","at rare intervals","at frequent intervals","in a serious manner","in a playful manner"],
+    ["tedious","boring and wearisome","thrilling and gripping","hideous and repulsive","beautiful and striking"],
+    ["wary","careful about danger","oblivious to danger","worn out and tired","rested and energetic"],
+    ["yearn","to feel deep longing","to feel deep dislike","to be paid for work","to pay out for work"],
+    ["zeal","great passion for a cause","no interest in a cause","a feeling of bitter envy","a spirit of generosity"],
+    ["barren","unfit for growing crops","fit for growing crops","enclosed by a barrier","open without a barrier"],
+    ["diligent","hardworking and careful","lazy and neglectful","watered down, weakened","boiled down, strengthened"],
+    ["fickle","changing without warning","staying steady and fixed","pickled in salt water","served fresh and raw"],
+    ["hoax","a deliberate deception","an honest, true report","a lift with a pulley","a drop with a pulley"],
+    ["linger","to stay longer than needed","to leave sooner than needed","to speak in a soft voice","to shout in a sharp voice"],
+    ["sturdy","solidly built and strong","loosely built and weak","fond of studying books","averse to studying books"],
+    ["ample","more than sufficient","far from sufficient","a small test portion","a whole item for sale"]
   ],
   [ // Intermediate
-    ["ambiguous","open to more than one meaning","clearly stated","extremely loud","very ambitious"],
-    ["benign","harmless","deadly","secret","ancient"],
-    ["concise","brief but clear","long and rambling","rude","hidden"],
-    ["detrimental","harmful","helpful","decorative","temporary"],
-    ["elaborate","detailed and complex","plain","swift","silent"],
-    ["feasible","possible to do","forbidden","edible","festive"],
-    ["gratuitous","uncalled for","deeply thankful","carefully planned","highly profitable"],
-    ["inevitable","certain to happen","unlikely","invisible","pleasant"],
-    ["mitigate","to make less severe","to make worse","to measure","to move away"],
-    ["negligible","too small to matter","very large","easily negotiated","quick to anger"],
-    ["prudent","wise and careful","rash","stingy","proud"],
-    ["reluctant","unwilling","eager","tired","relevant"],
-    ["scrutinize","to examine closely","to glance at","to scratch","to forget"],
-    ["tentative","not yet certain","firm and final","loud and brash","very tense"],
-    ["volatile","liable to change rapidly","stable","dull and slow","very tasty"],
-    ["whimsical","playfully unpredictable","solemn","fragile","wealthy"],
-    ["alleviate","to ease","to intensify","to ignore","to praise"],
-    ["arbitrary","based on whim, not reason","carefully reasoned","legally binding","two-sided"],
-    ["coherent","logical and consistent","scattered","cold","heavy"],
-    ["discrepancy","a mismatch between facts","a full agreement","a disguise","a short break"],
-    ["exacerbate","to make worse","to improve","to excuse","to hurry"],
-    ["frivolous","not serious","very important","frightened","frozen"],
-    ["lenient","mild in punishment","harsh","lengthy","lonely"],
-    ["pragmatic","practical","dreamy","pompous","poetic"],
-    ["scarce","in short supply","plentiful","frightening","sharp"],
-    ["verbose","using too many words","silent","truthful","rude"],
-    ["advocate","to publicly support","to oppose","to postpone","to calculate"],
-    ["ubiquitous","found everywhere","extremely rare","very expensive","hidden from view"]
+    ["ambiguous","open to several readings","having one clear reading","highly driven to succeed","lacking the drive to win"],
+    ["benign","gentle and harmless","harmful and dangerous","easy to bend or flex","stiff and unbending"],
+    ["concise","short but to the point","lengthy and overloaded","guided by a moral sense","lacking a moral sense"],
+    ["detrimental","causing harm or damage","bringing help or benefit","firmly set on a goal","easily swayed from goals"],
+    ["elaborate","full of careful detail","plain and lacking detail","to remove all of it","to include all of it"],
+    ["feasible","possible to carry out","impossible to carry out","full of festive cheer","full of solemn mourning"],
+    ["gratuitous","done for no good reason","done for a sound reason","feeling deeply thankful","feeling deeply resentful"],
+    ["inevitable","unavoidable and certain","avoidable and uncertain","too hidden to be seen","too obvious to miss"],
+    ["mitigate","to lessen the severity","to increase the severity","to move to a new place","to remain in one place"],
+    ["negligible","too small to matter","too large to ignore","failing to take care","being very careful"],
+    ["prudent","careful and sensible","rash and thoughtless","shocked by impropriety","untroubled by impropriety"],
+    ["reluctant","unwilling and hesitant","ready and enthusiastic","closely tied to the topic","unrelated to the topic"],
+    ["scrutinize","to inspect very closely","to glance at carelessly","to crumple into a ball","to flatten out smoothly"],
+    ["tentative","not yet settled or fixed","final and unchangeable","stretched tight and tense","hanging loose and slack"],
+    ["volatile","likely to change fast","stable and unchanging","offered of one's own will","forced against one's will"],
+    ["whimsical","playfully odd or quirky","serious and practical","crying in a low whine","shouting in a loud cheer"],
+    ["alleviate","to ease pain or strain","to cause pain or strain","to raise up to a height","to bring down to a depth"],
+    ["arbitrary","based on whim, not reason","based on careful reasoning","judged by a neutral umpire","judged by a biased party"],
+    ["coherent","logical and consistent","muddled and contradictory","built into its nature","added on from outside"],
+    ["discrepancy","a mismatch between facts","an exact match of facts","tact in what one says","tactlessness in speech"],
+    ["exacerbate","to make a thing worse","to make a thing better","to cut out a section","to add in a section"],
+    ["frivolous","silly and unimportant","weighty and important","icy and freezing cold","scorching and very hot"],
+    ["lenient","mild when judging others","harsh when judging others","lasting a very long time","lasting a very short time"],
+    ["pragmatic","sensible and realistic","dreamy and unrealistic","pumped full of air","drained of all air"],
+    ["scarce","rare and hard to find","common and easy to find","easily scared or startled","hard to scare or startle"],
+    ["verbose","using too many words","using too few words","spoken aloud, not written","written down, not spoken"],
+    ["advocate","to publicly back a cause","to publicly attack a cause","to clear people from danger","to send people into danger"],
+    ["ubiquitous","found everywhere at once","found in very few places","grossly wicked and unjust","completely fair and just"]
   ],
   [ // Advanced
-    ["acrimonious","bitter and angry","cheerful","extremely tall","done in secret"],
-    ["ameliorate","to make better","to make worse","to amuse","to sell"],
-    ["capitulate","to surrender","to take charge","to capture","to count"],
-    ["cogent","clear and convincing","confused","tiny","cold"],
-    ["copious","abundant","scarce","secret","noisy"],
-    ["cursory","hasty and superficial","thorough","angry","ancient"],
-    ["dearth","a scarcity","an abundance","a celebration","a tool"],
-    ["disparate","fundamentally different","closely alike","deeply sad","freely given"],
-    ["equivocal","deliberately ambiguous","perfectly clear","evenly balanced","very honest"],
-    ["exculpate","to clear of blame","to accuse","to dig out","to breathe out"],
-    ["fastidious","hard to please","careless","rapid","greasy"],
-    ["inimical","hostile","friendly","identical","endless"],
-    ["laconic","using very few words","very talkative","sad","lazy"],
-    ["loquacious","talkative","silent","clumsy","wealthy"],
-    ["mendacious","untruthful","repairing","beggarly","wise"],
-    ["munificent","very generous","stingy","magnificent in size","musical"],
-    ["obstreperous","noisy and unruly","quiet and obedient","hard to see","very thin"],
-    ["perfunctory","done without real care","done with great care","extremely fragrant","very quick"],
-    ["propitious","favorable","unlucky","proper","pious"],
-    ["recondite","little known and obscure","widely famous","freshly made","very bitter"],
-    ["salubrious","health-giving","sorrowful","salty","very dirty"],
-    ["sycophant","a flatterer seeking favor","a wise advisor","a type of tree","a harsh critic"],
-    ["truculent","eager to fight","timid","tasty","truthful"],
-    ["vitriolic","bitterly harsh","mildly pleasant","glassy","very small"]
+    ["acrimonious","bitter and angry in tone","warm and gentle in tone","full of pomp and ritual","free of pomp and ritual"],
+    ["ameliorate","to make a bad thing better","to make a bad thing worse","to blend into one whole","to split into separate bits"],
+    ["capitulate","to give in and surrender","to fight on and resist","to sum up the key points","to omit the key points"],
+    ["cogent","clear and convincing","vague and unconvincing","sharing a common source","sharing no common source"],
+    ["copious","present in large amounts","present in small amounts","made as an exact copy","made as the original"],
+    ["cursory","done quickly and lightly","done slowly and deeply","written in joined script","written in block letters"],
+    ["dearth","a shortage of something","a surplus of something","the moment life ends","the moment life begins"],
+    ["disparate","fundamentally different","fundamentally the same","having lost all hope","having gained new hope"],
+    ["equivocal","open to two readings","having one certain sense","equal in worth or value","unequal in worth or value"],
+    ["exculpate","to clear of all blame","to find guilty of blame","to dig up from earth","to bury deep in earth"],
+    ["fastidious","very picky about detail","careless about detail","moving at great speed","moving at low speed"],
+    ["inimical","hostile or harmful","friendly or helpful","too unique to copy","simple to copy fully"],
+    ["laconic","using very few words","using very many words","famous and widely known","obscure and little known"],
+    ["loquacious","tending to talk a lot","tending to talk little","lively and full of life","dull and lacking life"],
+    ["mendacious","given to telling lies","given to telling truth","holding on stubbornly","releasing very easily"],
+    ["munificent","very generous in giving","very stingy in giving","grand and impressive","plain and unimpressive"],
+    ["obstreperous","noisy and hard to control","quiet and easy to control","blocking free passage","allowing free passage"],
+    ["perfunctory","done with minimal care","done with great care","serving a useful purpose","serving no useful purpose"],
+    ["propitious","favorable and promising","unfavorable and gloomy","arousing deep suspicion","inspiring deep trust"],
+    ["recondite","obscure and little known","famous and widely known","put back in good order","left in bad disrepair"],
+    ["salubrious","good for your health","bad for your health","tasting strongly of salt","tasting free of salt"],
+    ["sycophant","a flatterer seeking favor","an open critic of rulers","a large orchestral work","a work for one player"],
+    ["truculent","eager to start a fight","eager to avoid a fight","letting light pass","blocking all light"],
+    ["vitriolic","bitterly harsh in speech","warmly kind in speech","clear and glass-like","dark and stone-like"]
   ],
   [ // Expert
-    ["abstruse","difficult to understand","easy to grasp","brief","hungry"],
-    ["apocryphal","of doubtful authenticity","fully verified","holy and sacred","very ancient"],
-    ["cavil","to raise petty objections","to cheer loudly","to dig a cave","to carve wood"],
-    ["contumacious","stubbornly disobedient","very polite","filled with pride","extremely sleepy"],
-    ["desiccate","to dry out completely","to cut into pieces","to decorate","to flood"],
-    ["fulminate","to protest loudly and angrily","to lightly cook","to stir gently","to flatter"],
-    ["impecunious","having very little money","extremely wealthy","unable to speak","not yet born"],
-    ["inchoate","just begun and not fully formed","fully developed","very cold","dishonest"],
-    ["insouciant","casually carefree","deeply worried","very insulting","easily broken"],
-    ["largesse","generous giving","great size","a type of fabric","a long speech"],
-    ["obloquy","public abuse or disgrace","a long poem","a type of mirror","a slanted line"],
-    ["pellucid","transparently clear","muddy","sticky","very rare"],
-    ["perspicacious","having keen insight","dripping with sweat","very stubborn","hard to please"],
-    ["pusillanimous","cowardly","very tiny","extremely kind","unusually loud"],
-    ["rapacious","grasping and greedy","very fast","gentle","musical"],
-    ["sinecure","a paid job with little work","a medical remedy","a type of knot","a strict rule"],
-    ["solipsism","the view that only one's own mind is sure to exist","a belief in many gods","a fear of crowds","love of solitude in nature"],
-    ["tendentious","promoting a particular point of view","very gentle","related to muscles","extremely brief"],
-    ["vituperate","to berate abusively","to praise warmly","to vote repeatedly","to cook slowly"],
-    ["apotheosis","the highest point or ideal example","a sudden collapse","a small mistake","a type of medicine"],
-    ["sedulous","persistently diligent","very sleepy","filled with sugar","hard to see"],
-    ["prolix","tediously long-winded","very short","greasy","shiny"],
-    ["refulgent","shining brightly","falling apart","very cold","slow to react"],
-    ["recrudescence","a renewed outbreak","a gradual decline","a type of glow","a legal ruling"]
+    ["abstruse","deep and hard to grasp","plain and easy to grasp","existing only as an idea","existing in physical form"],
+    ["apocryphal","of doubtful authenticity","of proven authenticity","about the world's end","about the world's start"],
+    ["cavil","to make petty objections","to give lavish praise","to dig out a hollow","to fill in a hollow"],
+    ["contumacious","stubbornly defying orders","willingly obeying orders","going on without a break","starting and stopping often"],
+    ["desiccate","to dry out completely","to drench completely","to defile a holy place","to honor a holy place"],
+    ["fulminate","to rage angrily and loudly","to approve calmly and softly","to clear a place of pests","to fill a place with pests"],
+    ["impecunious","having very little money","having plenty of money","acting on sudden impulse","acting after long thought"],
+    ["inchoate","just begun; not formed","fully formed and complete","completely disordered","perfectly well ordered"],
+    ["insouciant","carefree and unbothered","worried and troubled","boldly rude to others","gracious and respectful"],
+    ["largesse","generous gifts of money","stingy hoarding of money","the state of being huge","the state of being tiny"],
+    ["obloquy","public abuse and disgrace","public praise and honor","slanting and indirect","straight and direct"],
+    ["pellucid","clear and transparent","thick, dark, and murky","calm and untroubled","stormy and troubled"],
+    ["perspicacious","having sharp insight","lacking any insight","clearly put into words","vaguely put into words"],
+    ["pusillanimous","cowardly and fearful","bold and courageous","generous in forgiving","grudging in forgiving"],
+    ["rapacious","greedy and grasping","giving and selfless","moving at high speed","moving at low speed"],
+    ["sinecure","a paid post with no work","a hard job with no pay","a smooth sine wave curve","a perfectly straight line"],
+    ["solipsism","belief only one mind exists","belief all minds surely exist","a gross grammar blunder","a flawless grammar model"],
+    ["tendentious","pushing a biased view","giving a balanced view","extremely thin or weak","extremely thick or strong"],
+    ["vituperate","to abuse in harsh words","to praise in warm words","to spoil or degrade","to improve or refine"],
+    ["apotheosis","the peak or ideal example","the bottom or worst case","an idea awaiting proof","a fact proven for sure"],
+    ["sedulous","diligent and dedicated","idle and neglectful","quick to believe things","slow to believe things"],
+    ["prolix","tediously long-winded","refreshingly concise","producing many works","producing few works"],
+    ["refulgent","radiant and shining","dull and lightless","surging up once more","sinking down once more"],
+    ["recrudescence","a fresh outbreak of ills","a lasting end to ills","a state of fizzing up","a state of going flat"]
   ],
   [ // Obscure
-    ["pettifogger","a lawyer who uses petty tricks","a small frog","a person who grows tiny plants","a fussy cook"],
-    ["apricity","the warmth of the sun in winter","a type of fruit tree","extreme honesty","fear of heights"],
-    ["petrichor","the smell of rain on dry earth","a type of rock oil","a stone carver","a bitter herb"],
-    ["sphygmic","relating to the pulse","relating to sphinxes","relating to spiders","relating to sound waves"],
-    ["eleemosynary","relating to charity","relating to elephants","relating to electricity","relating to elegant speech"],
-    ["tmesis","the splitting of a word by inserting another word","a type of rare tea","a fear of darkness","a metal alloy"],
-    ["limerence","an involuntary state of intense romantic infatuation","a type of poem","a citrus fruit","a legal boundary"],
-    ["pareidolia","seeing faces or patterns in random shapes","a fear of parents","a type of ancient pottery","a mild paralysis"],
-    ["sempiternal","eternal","half-finished","very tidy","seasonal"],
-    ["thaumaturge","a worker of miracles","a type of jar","a tax collector","a deep sea diver"],
-    ["velleity","a mere wish with no effort to act","a fast bicycle","a woolly fabric","a sudden fever"],
-    ["usufruct","the legal right to use another's property","a rotten fruit","a type of grain","a fruitful harvest"],
-    ["zugzwang","a position where any move makes things worse","a sudden gust of wind","a type of sausage","a surprise attack"],
-    ["cacodemon","an evil spirit","a bad singer","a type of cactus","a chemical solvent"],
-    ["hebetude","mental dullness","great height","a type of hinge","a youthful glow"],
-    ["mansuetude","gentleness","a great mansion","manual skill","male vanity"],
-    ["oneiric","relating to dreams","relating to onions","relating to unity","relating to ownership"],
-    ["paronomasia","a pun","a wide view","a fear of neighbors","a type of fern"],
-    ["quiddity","the essential nature of a thing","a game with brooms","a quiet tendency","a type of small bird"],
-    ["rhadamanthine","rigorously strict and just","related to rhubarb","made of rhododendrons","fond of rhyme"],
-    ["sciolist","a person with only superficial knowledge","a student of soil","a skilled glassmaker","a lover of sunshine"],
-    ["tenebrous","dark and shadowy","stubbornly firm","related to tennis","very thin"],
-    ["hapax legomenon","a word recorded only once in a corpus","a six-sided figure","a very long legal term","a type of Greek dance"],
-    ["ultramontane","favoring strong papal authority","living high in the mountains","extremely modern","related to the sea"]
+    ["pettifogger","a lawyer using petty tricks","an honest, upright lawyer","a seller of small goods","a seller of bulk goods"],
+    ["apricity","winter sun's gentle warmth","summer wind's cool chill","the first light of dawn","the last light of dusk"],
+    ["petrichor","the smell of rain on soil","the smell of parched dust","turning to solid stone","crumbling stone to powder"],
+    ["sphygmic","relating to the pulse","relating to total stillness","relating to the upper body","relating to the lower body"],
+    ["eleemosynary","having to do with charity","having to do with profit","having to do with basics","having to do with mastery"],
+    ["tmesis","a word split by a word","two words fused into one","an essay's central claim","an essay's main objection"],
+    ["limerence","intense romantic obsession","calm platonic friendship","a comic five-line poem","a solemn epic-length poem"],
+    ["pareidolia","seeing faces in clouds","not knowing familiar faces","needless fear of plots","naive trust of everyone"],
+    ["sempiternal","lasting for all time","lasting a brief time","of or like a mother","of or like a father"],
+    ["thaumaturge","a worker of miracles","a debunker of miracles","one who melts things","one who freezes things"],
+    ["velleity","a weak, unacted wish","a strong, acted-on desire","speed in one direction","a state of total rest"],
+    ["usufruct","the right to use property","full ownership of property","high-interest money lending","interest-free money lending"],
+    ["zugzwang","a forced move that hurts","a forced move that helps","a sweet German pastry","a savory German sausage"],
+    ["cacodemon","a wicked, evil spirit","a gentle, good spirit","a harsh jumble of sound","a sweet blend of sound"],
+    ["hebetude","dullness of the mind","sharpness of the mind","a state of great joy","a state of deep misery"],
+    ["mansuetude","gentleness and meekness","harshness and violence","a large, grand house","a small, humble hut"],
+    ["oneiric","having to do with dreams","having to do with waking","saying the exact reverse","saying just what is meant"],
+    ["paronomasia","a pun; a play on words","a plain literal statement","a sweeping scenic view","a narrow close-up view"],
+    ["susurrus","a soft whispering sound","a deafening loud roar","a thin, high wispy cloud","a thick, low heavy cloud"],
+    ["rhadamanthine","severely strict and just","lenient and easily swayed","extremely hard and firm","extremely soft and weak"],
+    ["sciolist","a shallow pretend expert","a deep genuine expert","one who performs alone","one who performs in groups"],
+    ["tenebrous","dark, dim, and shadowy","bright, sunny, and clear","soft, gentle, and tender","hard, rough, and tough"],
+    ["hapax legomenon","a word recorded only once","a word found in every text","a fortunate chance event","an unfortunate chance event"],
+    ["ultramontane","favoring papal supremacy","opposing papal supremacy","living high in mountains","living deep in valleys"]
   ]
-];
+].map(level => level.map(([word, correct, ...wrong]) => ({ word, correct, wrong })));
 
 /* ---------- Helpers ---------- */
 const $app = document.getElementById("app");
@@ -280,7 +282,7 @@ function newGame() {
   };
 }
 function pickQuestions(level) {
-  return shuffle(BANK[level]).slice(0, PER_LEVEL).map(([word, correct, ...wrong]) => ({ word, correct, options: shuffle([correct, ...wrong]) }));
+  return shuffle(BANK[level]).slice(0, PER_LEVEL).map(({ word, correct, wrong }) => ({ word, correct, options: shuffle([correct, ...wrong]) }));
 }
 
 /* ---------- Scoring ---------- */
@@ -398,13 +400,15 @@ function verdict(n) {
 }
 
 function resultView() {
-  const big = el("div", { class: "big" }, "0");
-  const target = G.est, t0 = performance.now(), dur = 1800;
-  (function tick(now) {
-    const p = Math.min(1, (now - t0) / dur);
-    big.textContent = fmt(Math.round(target * (1 - Math.pow(1 - p, 3))));
-    if (p < 1 && big.isConnected !== false) requestAnimationFrame(tick);
-  })(t0);
+  const big = el("div", { class: "big" }, fmt(G.est));
+  const target = G.est, dur = 1800;
+  requestAnimationFrame(t0 => {
+    (function tick(now) {
+      const p = Math.min(1, (now - t0) / dur);
+      big.textContent = fmt(Math.round(target * (1 - Math.pow(1 - p, 3))));
+      if (p < 1 && big.isConnected) requestAnimationFrame(tick); else big.textContent = fmt(target);
+    })(t0);
+  });
 
   const rows = LEVELS.map((l, i) => {
     const t = G.tally[i], pct = Math.round(levelRatio(t) * 100);
